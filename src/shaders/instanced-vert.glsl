@@ -22,7 +22,7 @@ out vec4 fs_Pos;
 out vec4 fs_Nor;
 out vec4 fs_Col;
 
-// Assumes resolution is 2000 x 2000 throughout the program
+// Assumes resolution is 2000 x 2000 throughout the program as input
 vec4 screenToQuad(vec4 pos) {
     vec3 newPos = pos.xyz / 1000.0 - 1.0;
     return vec4(newPos, 1.0);
@@ -40,7 +40,7 @@ void main() {
     vec4 transformedPos = getTransformationMatrix() * vs_Pos;
     vec4 quadPos = screenToQuad(transformedPos);
 
-    // Everything is in x, z plane now, so we swap y and z coordinates
-    vec4 finalQuadPos = vec4(quadPos.x, quadPos.z, 0.0, 1.0);
-    gl_Position = finalQuadPos;
+    // Render the quads within a box of (-50, -50) and (50, 50)
+    vec4 finalQuadPos = vec4(quadPos.x * 50.0, 0.1, quadPos.z * 50.0, 1.0);
+    gl_Position = u_ViewProj * finalQuadPos;
 }

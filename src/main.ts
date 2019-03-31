@@ -1,8 +1,9 @@
-import {vec3} from 'gl-matrix';
+import {vec2, vec3} from 'gl-matrix';
 import * as Stats from 'stats-js';
 import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
 import ScreenQuad from './geometry/ScreenQuad';
+import Plane from './geometry/Plane';
 import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
 import Camera from './Camera';
 import {setGL} from './globals';
@@ -19,7 +20,7 @@ const controls = {
   'Show Population Density': showPopulationDensity,
   'Elevation & Pop Density': showElevationAndDensity,
   'Iterations': 15,
-  'Grid Size': 3,
+  'Grid Size': 8,
   'Pop Threshold': 0.4,
 };
 
@@ -43,6 +44,7 @@ function showElevationAndDensity() {
 
 let square: Square;
 let screenQuad: ScreenQuad;
+let plane: Plane;
 let time: number = 0.0;
 let lsystem: LSystem;
 
@@ -51,6 +53,8 @@ function loadScene() {
   square.create();
   screenQuad = new ScreenQuad();
   screenQuad.create();
+  plane = new Plane(vec3.fromValues(0, 0, 0), vec2.fromValues(2, 2), 8);
+  plane.create();
 }
 
 function runLSystem() {
@@ -105,7 +109,7 @@ function main() {
   // Initial call to load scene
   loadScene();
 
-  const camera = new Camera(vec3.fromValues(0, 0, 150), vec3.fromValues(0, 0, 0));
+  const camera = new Camera(vec3.fromValues(0, 100, 0), vec3.fromValues(0, 0, 0));
 
   const renderer = new OpenGLRenderer(canvas);
   renderer.setClearColor(0.2, 0.2, 0.2, 1);
@@ -120,6 +124,11 @@ function main() {
   const flat = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/flat-vert.glsl')),
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/flat-frag.glsl')),
+  ]);
+
+  const planeShader = new ShaderProgram([
+    new Shader(gl.VERTEX_SHADER, require('./shaders/plane-vert.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/plane-frag.glsl')),
   ]);
 
   // This function will be called every frame
@@ -138,6 +147,7 @@ function main() {
     renderer.clear();
     renderer.render(camera, flat, [screenQuad]);
     renderer.render(camera, instancedShader, [square]);
+    renderer.render(camera, planeShader, [plane]);
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame
@@ -170,7 +180,7 @@ function main() {
   const height = 2000;
 
   textureRenderer.setSize(width, height);
-  textureRenderer.setClearColor(0, 0, 1, 1);
+  textureRenderer.setClearColor(0, 0, 0, 1);
 
   let textureData: Uint8Array = textureRenderer.renderTexture(camera, textureShader, [screenQuad]);
 
