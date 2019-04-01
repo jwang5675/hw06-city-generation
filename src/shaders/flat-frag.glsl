@@ -90,5 +90,5 @@ vec3 getMapTypeColor() {
 
 void main() {
 	vec3 color = getMapTypeColor();
-	out_Col = vec4(color, 1.0);
+	out_Col = vec4(0.0, 0.0, 0.0, 1.0);
 }

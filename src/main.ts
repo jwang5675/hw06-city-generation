@@ -68,7 +68,7 @@ function runLSystem() {
   let result: number[][] = grid.generateGrid(lsystem.edges, controls['Pop Threshold']);
 
   // Instance Render the street data
-  let vboData: any = grid.getVBOData();
+  let vboData: any = lsystem.getVBOData();
   square.setInstanceVBOsFullTransform(vboData.col1, vboData.col2, vboData.col3, vboData.col4, vboData.colors);
   square.setNumInstances(vboData.col1.length / 4.0);
 }
