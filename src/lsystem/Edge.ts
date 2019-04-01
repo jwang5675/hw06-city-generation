@@ -73,6 +73,30 @@ export default class Edge {
 		let det: number = x1 * y2 - y1 * x2;
 		return -Math.atan2(det, dot);
 	}
+
+	rasterizerHelper(ycord: number) {
+		let ymax = Math.max(this.p2.position[2], this.p1.position[2]);
+    let ymin = Math.min(this.p2.position[2], this.p1.position[2]);
+
+    if (ymax < ycord || ymin > ycord) {
+        return false;
+    }
+
+
+		let yslope = this.p2.position[2] - this.p1.position[2];
+    let xslope = this.p2.position[0] - this.p1.position[0];
+
+    if (xslope == 0) {
+    	return this.p1.position[0];
+    }
+    if (yslope == 0) {
+    	return this.midpoint();
+    } else {
+    	let m = yslope / xslope;
+      return (ycord / m) - (this.p1.position[2] / m) + this.p1.position[0];
+    }
+    return null;
+	}
 	
 	// Returns the transformation matrix to instance render the current edge in the x, z plane
 	getTransformation() {

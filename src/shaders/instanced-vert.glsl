@@ -29,7 +29,7 @@ vec4 screenToQuad(vec4 pos) {
 }
 
 mat4 getTransformationMatrix() {
-	return mat4(vs_TransformCol1, vs_TransformCol2, vs_TransformCol3, vs_TransformCol4);
+    return mat4(vs_TransformCol1, vs_TransformCol2, vs_TransformCol3, vs_TransformCol4);
 }
 
 void main() {

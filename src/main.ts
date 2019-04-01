@@ -9,6 +9,7 @@ import Camera from './Camera';
 import {setGL} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import LSystem from './lsystem/LSystem';
+import CityGrid from './citysystem/CityGrid';
 
 let changed: boolean = true;
 
@@ -46,7 +47,9 @@ let square: Square;
 let screenQuad: ScreenQuad;
 let plane: Plane;
 let time: number = 0.0;
+
 let lsystem: LSystem;
+let grid: CityGrid;
 
 function loadScene() {
   square = new Square();
@@ -65,6 +68,54 @@ function runLSystem() {
   let vboData: any = lsystem.getVBOData();
   square.setInstanceVBOsFullTransform(vboData.col1, vboData.col2, vboData.col3, vboData.col4, vboData.colors);
   square.setNumInstances(vboData.col1.length / 4.0);
+
+  // Start City Generation
+  let result: boolean[][] = grid.generateGrid(lsystem.edges);
+
+  let col1Array: number[] = [];
+  let col2Array: number[] = [];
+  let col3Array: number[] = [];
+  let col4Array: number[] = [];
+  let colorsArray: number[] = [];
+
+  for (let i: number = 0; i < 2000; i++) {
+    for (let j: number = 0; j < 2000; j++) {
+      if (result[i][j]) {
+        col1Array.push(1);
+        col1Array.push(0);
+        col1Array.push(0);
+        col1Array.push(0);
+
+        col2Array.push(0);
+        col2Array.push(1);
+        col2Array.push(0);
+        col2Array.push(0);
+
+        col3Array.push(0);
+        col3Array.push(0);
+        col3Array.push(1);
+        col3Array.push(0);
+ 
+        col4Array.push(i);
+        col4Array.push(0);
+        col4Array.push(j);
+        col4Array.push(1);
+        colorsArray.push(1);
+        colorsArray.push(0);
+        colorsArray.push(0);
+        colorsArray.push(1);
+      }
+    }
+  }
+
+  let col1: Float32Array = new Float32Array(col1Array);
+  let col2: Float32Array = new Float32Array(col2Array);
+  let col3: Float32Array = new Float32Array(col3Array);
+  let col4: Float32Array = new Float32Array(col4Array);
+  let colors: Float32Array = new Float32Array(colorsArray);
+
+  square.setInstanceVBOsFullTransform(col1, col2, col3, col4, colors);
+  square.setNumInstances(col1.length / 4);
 }
 
 function main() {
@@ -185,6 +236,7 @@ function main() {
   let textureData: Uint8Array = textureRenderer.renderTexture(camera, textureShader, [screenQuad]);
 
   lsystem = new LSystem(textureData);
+  grid = new CityGrid(textureData);
   /** Texture Renderer and LSystem Setup End Here **/
 
   // Start the render loop
