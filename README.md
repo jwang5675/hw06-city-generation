@@ -5,9 +5,7 @@ Jason Wang (jasonwa)
 External Resources: 
 - CIS 460 Rasterizer code
 
-Demo (make your window have a 1:1 aspect ratio for best results) : https://jwang5675.github.io/hw05-road-generation/
-
-![](images/elepop.png)
+Demo (warning, scene is a bit slow, lowering resolution would provide for a better experience) : https://jwang5675.github.io/hw06-city-generation/
 
 ## Implemented Details
 
