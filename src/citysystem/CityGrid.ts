@@ -1,13 +1,16 @@
-import {vec3} from 'gl-matrix';
+import {vec2, vec3, mat4} from 'gl-matrix';
 import Point from '../lsystem/Point';
 import Edge from '../lsystem/Edge';
 import TextureUtil from '../lsystem/TextureUtil';
+import BuildingGenerator from '../citysystem/BuildingGenerator';
 
 export default class CityGrid {
 	textureUtil: TextureUtil;
+	buildingGenerator: BuildingGenerator;
 
 	// Grid is a number array, 0 = nothing, 1 = road, 2 = water, 3 = building center
 	grid: number[][];
+	buildingPoints: vec2[];
 
 	highwayDelta: number;
 	roadDelta: number;
@@ -15,6 +18,7 @@ export default class CityGrid {
 
 	constructor(textureData: Uint8Array) {
 		this.textureUtil = new TextureUtil(textureData);
+		this.buildingGenerator = new BuildingGenerator(textureData);
 		this.highwayDelta = 10;
 		this.roadDelta = 4;
 		this.cityDelta = 10;
@@ -22,6 +26,8 @@ export default class CityGrid {
 
 	resetGrid() {
 		this.grid = [];
+		this.buildingPoints = [];
+		
 		for (let i: number = 0; i < 2000; i++) {
 			let row: number[] = [];
 			for (let j: number = 0; j < 2000; j++) {
@@ -72,7 +78,6 @@ export default class CityGrid {
 							this.grid[x][y] = 1;
 						}
 					}
-
 				}
 			}
 		}
@@ -101,6 +106,7 @@ export default class CityGrid {
 					}
 				}
 
+				this.buildingPoints.push(vec2.fromValues(x, y));
 				counter = counter + 1;
 			}
 		}
@@ -108,7 +114,7 @@ export default class CityGrid {
 		return this.grid;
 	}
 
-	getVBOData() {
+	getVBODataRasterization() {
 		let col1Array: number[] = [];
 	  let col2Array: number[] = [];
 	  let col3Array: number[] = [];
@@ -164,6 +170,63 @@ export default class CityGrid {
 	        }
 	      }
 	    }
+	  }
+
+	  let col1: Float32Array = new Float32Array(col1Array);
+	  let col2: Float32Array = new Float32Array(col2Array);
+	  let col3: Float32Array = new Float32Array(col3Array);
+	  let col4: Float32Array = new Float32Array(col4Array);
+	  let colors: Float32Array = new Float32Array(colorsArray);
+
+	  let ret: any = {};
+  	ret.col1 = col1;
+  	ret.col2 = col2;
+  	ret.col3 = col3;
+  	ret.col4 = col4;
+  	ret.colors = colors;
+
+  	return ret;
+	}
+
+	getVBODataBuildings() {
+	  let col1Array: number[] = [];
+	  let col2Array: number[] = [];
+	  let col3Array: number[] = [];
+	  let col4Array: number[] = [];
+	  let colorsArray: number[] = [];
+
+	  for (let i: number = 0; i < this.buildingPoints.length; i++) {
+	  	let pos: vec2 = this.buildingPoints[i];
+	  	let transformations: mat4[] = this.buildingGenerator.generateBuilding(pos[0], pos[1]);
+
+	  	for (let j: number = 0; j < transformations.length; j++) {
+	  		let currTransform: mat4 = transformations[j];
+
+		  	col1Array.push(currTransform[0]);
+	      col1Array.push(currTransform[1]);
+	      col1Array.push(currTransform[2]);
+	      col1Array.push(currTransform[3]);
+
+	      col2Array.push(currTransform[4]);
+	      col2Array.push(currTransform[5]);
+	      col2Array.push(currTransform[6]);
+	      col2Array.push(currTransform[7]);
+
+	      col3Array.push(currTransform[8]);
+	      col3Array.push(currTransform[9]);
+	      col3Array.push(currTransform[10]);
+	      col3Array.push(currTransform[11]);
+
+	      col4Array.push(currTransform[12]);
+	      col4Array.push(currTransform[13]);
+	      col4Array.push(currTransform[14]);
+	      col4Array.push(currTransform[15]);
+
+	     	colorsArray.push(0.8);
+		    colorsArray.push(0.8);
+		    colorsArray.push(0.8);
+		    colorsArray.push(1.0);
+	  	}
 	  }
 
 	  let col1: Float32Array = new Float32Array(col1Array);

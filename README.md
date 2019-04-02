@@ -29,7 +29,13 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - ![](images/buildingplacement.png)
 
 - __(Generate Building Geometry)__
-  - TODO
+  - I generated the building geometry as described in the figured 3 below using only a cuboid polygon. 
+  - ![](images/figure3.png)
+  - In my generation, in the below example, you can see that the red elongated cuboid represents the original building and all the gray buildings are extruded pieces from the algorithm
+  - Top View:
+  - ![](images/buildingtop.png)
+  - Side View:
+  - ![](images/buildingside.png)
 
 - __(Generate Building Textures)__
   - TODO

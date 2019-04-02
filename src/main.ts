@@ -4,6 +4,7 @@ import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
 import ScreenQuad from './geometry/ScreenQuad';
 import Plane from './geometry/Plane';
+import Cube from './geometry/Cube';
 import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
 import Camera from './Camera';
 import {setGL} from './globals';
@@ -46,18 +47,29 @@ function showElevationAndDensity() {
 let square: Square;
 let screenQuad: ScreenQuad;
 let plane: Plane;
+let cube: Cube;
+
 let time: number = 0.0;
 
 let lsystem: LSystem;
 let grid: CityGrid;
 
 function loadScene() {
+  // Square used to instance render roads
   square = new Square();
   square.create();
+
+  // Quad used to instance render skybox
   screenQuad = new ScreenQuad();
   screenQuad.create();
-  plane = new Plane(vec3.fromValues(0, 0, 0), vec2.fromValues(2, 2), 8);
+
+  // Plane used to instance render the land elevation
+  plane = new Plane(vec3.fromValues(0, 0, 0), vec2.fromValues(2.1, 2.1), 8);
   plane.create();
+
+  // Cube used to instance render the buildings
+  cube = new Cube(vec3.fromValues(0, 0, 0));
+  cube.create();
 }
 
 function runLSystem() {
@@ -71,6 +83,12 @@ function runLSystem() {
   let vboData: any = lsystem.getVBOData();
   square.setInstanceVBOsFullTransform(vboData.col1, vboData.col2, vboData.col3, vboData.col4, vboData.colors);
   square.setNumInstances(vboData.col1.length / 4.0);
+
+  // Instance Render the buildings
+  let buildingData: any = grid.getVBODataBuildings();
+  cube.setInstanceVBOsTransform(buildingData.col1, buildingData.col2, buildingData.col3, buildingData.col4, buildingData.colors);
+  cube.setNumInstances(buildingData.col1.length / 4.0);
+
 }
 
 function main() {
@@ -88,18 +106,18 @@ function main() {
   gui.add(controls, 'Show Elevation');
   gui.add(controls, 'Show Population Density');
   gui.add(controls, 'Elevation & Pop Density');
-  gui.add(controls, 'Iterations', 0, 20).step(1).onChange(
-    function() {
-      changed = true;
-    }.bind(this));
-  gui.add(controls, 'Grid Size', 3, 10).step(1).onChange(
-    function() {
-      changed = true;
-    }.bind(this));
-  gui.add(controls, 'Pop Threshold', 0, 1).step(0.05).onChange(
-    function() {
-      changed = true;
-    }.bind(this));
+  // gui.add(controls, 'Iterations', 0, 20).step(1).onChange(
+  //   function() {
+  //     changed = true;
+  //   }.bind(this));
+  // gui.add(controls, 'Grid Size', 3, 10).step(1).onChange(
+  //   function() {
+  //     changed = true;
+  //   }.bind(this));
+  // gui.add(controls, 'Pop Threshold', 0, 1).step(0.05).onChange(
+  //   function() {
+  //     changed = true;
+  //   }.bind(this));
 
 
   // get canvas and webgl context
@@ -137,6 +155,11 @@ function main() {
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/plane-frag.glsl')),
   ]);
 
+  const buildingShader = new ShaderProgram([
+    new Shader(gl.VERTEX_SHADER, require('./shaders/building-vert.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/building-frag.glsl')),
+  ]);
+
   // This function will be called every frame
   function tick() {
     camera.update();
@@ -148,12 +171,13 @@ function main() {
     }
 
     instancedShader.setTime(time);
-    flat.setTime(mapVal);
+    planeShader.setTime(mapVal);
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
     renderer.render(camera, flat, [screenQuad]);
     renderer.render(camera, instancedShader, [square]);
     renderer.render(camera, planeShader, [plane]);
+    renderer.render(camera, buildingShader, [cube]);
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame
