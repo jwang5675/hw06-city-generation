@@ -36,14 +36,14 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - ![](images/buildingtop.png)
   - Side View:
   - ![](images/buildingside.png)
-  - The heights also differ accross different population densities. Population near the water is higher compared to the population further away. Replacing the building spots with actual buildings, we get the following scene:
+  - The heights also differ accross different population densities. Population near the water is higher compared to the population further away. Replacing the building spots with actual buildings using instanced rendering and VBO transformation data, we get the following scene:
   - ![](images/plaincity.png)
 
 - __(Generate Building Textures)__
   - TODO
 
 - __(Generating Environment Lighting)__
-  - TODO
+  - In the scene, there is some Lambertian lighting applied to the buildings to make them more 3D in appearance. As a future goal, a way to add shadows to the scene is to use a shadow map by saving a depth buffer from each lights point of view and then sampling the scene with the camera on the depth buffer to determine shadows.
 
 - __(Procedural Sky Background)__
   - TODO
