@@ -36,6 +36,8 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - ![](images/buildingtop.png)
   - Side View:
   - ![](images/buildingside.png)
+  - The heights also differ accross different population densities. Population near the water is higher compared to the population further away. Replacing the building spots with actual buildings, we get the following scene:
+  - ![](images/plaincity.png)
 
 - __(Generate Building Textures)__
   - TODO
