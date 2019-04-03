@@ -175,9 +175,9 @@ function main() {
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
     renderer.render(camera, flat, [screenQuad]);
-    renderer.render(camera, instancedShader, [square]);
-    renderer.render(camera, planeShader, [plane]);
-    renderer.render(camera, buildingShader, [cube]);
+    //renderer.render(camera, instancedShader, [square]);
+    //renderer.render(camera, planeShader, [plane]);
+    //renderer.render(camera, buildingShader, [cube]);
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame

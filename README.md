@@ -54,3 +54,9 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - Added a basic blue hue sky with stars as the sky background
   - Added a small amount of FBM to the sky to make it less uniform with moving stars
   - The sky adds additional r and g values to the blue sky depending on the ray position so when the user moves around the sky, the blue gets a small amount of hue from different colors to simulate camera movement
+  - Red Hue Example:
+  - ![](images/redhue.png)
+  - Green Hue Example: 
+  - ![](images/greenhue.png)
+  - Blue Hue Example:
+  -![](images/bluehue.png)
