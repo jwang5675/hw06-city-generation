@@ -5,7 +5,7 @@ Jason Wang (jasonwa)
 External Resources: 
 - CIS 460 Rasterizer code
 
-Demo (warning, scene is a bit slow, lowering resolution would provide for a better experience) : https://jwang5675.github.io/hw06-city-generation/
+Demo: https://jwang5675.github.io/hw06-city-generation/
 
 ![](images/city.png)
 
