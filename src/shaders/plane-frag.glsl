@@ -71,11 +71,11 @@ vec3 getMapTypeColor() {
 	float waterValue = getWaterMap(mapPos);
 
 	if (waterValue == 0.0) {
-		return vec3(0.4, 0.7, 1);
+		return (vec3(0.4, 0.7, 1) + vec3(fbm(mapPos))) / 2.0;
 	}
 
 	if (u_Time == 0.0) {
-		return vec3(1, 1, 1);
+		return vec3(201, 228, 202) / 300.0 + vec3(fbm(mapPos)) / 2.5;
 	}
 	if (u_Time == 1.0) {
 		return vec3(0, getElevationMap(mapPos), 0);

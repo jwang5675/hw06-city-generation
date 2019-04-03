@@ -8,6 +8,14 @@ uniform float u_Time;
 in vec2 fs_Pos;
 out vec4 out_Col;
 
+const float PI = 3.14159265359;
+const float TWO_PI = 6.28318530718;
+const float fov = 0.7853975; // = 45.0 * 3.14159 / 180.0
+
+float rand(vec2 pos) {
+    return fract(sin(dot(pos.xy ,vec2(12.9898, 78.233))) * 43758.5453);
+}
+
 vec2 smoothF(vec2 pos) {
     return pos * pos * (3.0 - 2.0 * pos);
 }
@@ -36,59 +44,30 @@ float fbm(vec2 pos) {
     return ret;
 }
 
-float getWaterMap(vec2 pos) {
-	vec2 elevationPos = pos - vec2(1.1, 0.4);
-	float fbm = fbm(elevationPos / 2.0);
-	fbm = clamp((fbm - 0.378) / 0.622, 0.0, 1.0);
-	return fbm == 0.0 ? 0.0 : 1.0;
-}
-
-float getElevationMap(vec2 pos) {
-	float water = getWaterMap(pos);
-	vec2 elevationPos = pos - vec2(1.1, 0.4);
-	float fbm = fbm(elevationPos / 2.0);
-	fbm = clamp((fbm - 0.2), 0.0, 1.0);
-	return water == 0.0 ? 0.0 : fbm;
-}
-
-float getPopulationMap(vec2 pos) {
-	float water = getWaterMap(pos);
-	vec2 populationPos = pos - vec2(-0.02, 0);
-	float fbm = fbm(populationPos / 2.0);
-	return water == 0.0 ? 0.0 : fbm;
-}
-
-vec2 getQuadToMapPos() {
-	float originalX = (fs_Pos.x + 1.0) / 2.0;
-	float originalY = (fs_Pos.y + 1.0) / 2.0;
-	float x = mix(-0.15, 0.35, originalX);
-	float y = mix(0.057, 0.557, originalY);
-	return vec2(x, y);
-}
-
-vec3 getMapTypeColor() {
-	vec2 mapPos = getQuadToMapPos();
-	float waterValue = getWaterMap(mapPos);
-
-	if (waterValue == 0.0) {
-		return vec3(0.4, 0.7, 1);
-	}
-
-	if (u_Time == 0.0) {
-		return vec3(1, 1, 1);
-	}
-	if (u_Time == 1.0) {
-		return vec3(0, getElevationMap(mapPos), 0);
-	}
-	if (u_Time == 2.0) {
-		return vec3(getPopulationMap(mapPos), 0, 0);
-	}
-	if (u_Time == 3.0) {
-		return vec3(getPopulationMap(mapPos), getElevationMap(mapPos), 0);
-	}
+vec2 sphereToUV(vec3 p) {
+    float phi = atan(p.z, p.x);
+    if(phi < 0.0) {
+        phi += TWO_PI;
+    }
+    float theta = acos(p.y);
+    return vec2(1.0 - phi / TWO_PI, 1.0 - theta / PI);
 }
 
 void main() {
-	vec3 color = getMapTypeColor();
-	out_Col = vec4(0.0, 0.0, 0.0, 1.0);
+    vec3 u_Right = normalize(cross(u_Ref - u_Eye, u_Up));
+    float len = length(u_Ref - u_Eye);
+    float aspectRatio = u_Dimensions.x / u_Dimensions.y;
+    vec3 v = tan(fov / 2.0) * len * u_Up;
+    vec3 h = aspectRatio * tan(fov / 2.0) * len * u_Right;
+    vec3 point = u_Ref + fs_Pos.x * h + fs_Pos.y * v;
+    vec3 ray_direction = normalize(point - u_Eye);
+
+    vec3 color = 0.5 * (ray_direction + vec3(1.0, 1.0, 1.0)) + vec3(fbm(fs_Pos)) / 2.0;
+
+    // Add Stars
+    if (rand(ray_direction.xy) > 0.995) {
+        color = color + vec3(5.0);
+    }
+
+    out_Col = vec4(color, 8.0) / 8.0 + vec4(0.4, 0.7, 1, 0.0) / 1.7;
 }

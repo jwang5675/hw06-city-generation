@@ -64,7 +64,7 @@ function loadScene() {
   screenQuad.create();
 
   // Plane used to instance render the land elevation
-  plane = new Plane(vec3.fromValues(0, 0, 0), vec2.fromValues(2.1, 2.1), 8);
+  plane = new Plane(vec3.fromValues(0, 0, 0), vec2.fromValues(2.155, 2.155), 8);
   plane.create();
 
   // Cube used to instance render the buildings

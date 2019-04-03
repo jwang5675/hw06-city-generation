@@ -65,6 +65,7 @@ class ShaderProgram {
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
     this.unifViewProj   = gl.getUniformLocation(this.prog, "u_ViewProj");
     this.unifCameraAxes      = gl.getUniformLocation(this.prog, "u_CameraAxes");
+    this.unifDimensions   = gl.getUniformLocation(this.prog, "u_Dimensions");
     this.unifTime      = gl.getUniformLocation(this.prog, "u_Time");
     this.unifEye   = gl.getUniformLocation(this.prog, "u_Eye");
     this.unifRef   = gl.getUniformLocation(this.prog, "u_Ref");

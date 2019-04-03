@@ -93,9 +93,9 @@ export default class LSystem {
       col4Array.push(currTransform[14]);
       col4Array.push(currTransform[15]);
 
-      colorsArray.push(0);
-      colorsArray.push(0);
-      colorsArray.push(0);
+      colorsArray.push(79 / 500);
+      colorsArray.push(109 / 500);
+      colorsArray.push(122 / 500);
       colorsArray.push(1);
 		}
 

@@ -222,9 +222,9 @@ export default class CityGrid {
 	      col4Array.push(currTransform[14]);
 	      col4Array.push(currTransform[15]);
 
-	     	colorsArray.push(0.8);
-		    colorsArray.push(0.8);
-		    colorsArray.push(0.8);
+	     	colorsArray.push(130 / 255);
+		    colorsArray.push(163 / 255);
+		    colorsArray.push(161 / 255);
 		    colorsArray.push(1.0);
 	  	}
 	  }

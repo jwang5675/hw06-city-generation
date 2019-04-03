@@ -7,6 +7,8 @@ External Resources:
 
 Demo (warning, scene is a bit slow, lowering resolution would provide for a better experience) : https://jwang5675.github.io/hw06-city-generation/
 
+![](images/city.png)
+
 ## Implemented Details
 
 - __(Create 3D Environment)__
@@ -40,10 +42,15 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - ![](images/plaincity.png)
 
 - __(Generate Building Textures)__
-  - TODO
+  - Added basic fbm to the side of the building to add some texture
+  - Added a mod function to add windows to the scene with a varying of light
+  - Offset the mod function to add windows at non uniform spots on the buildings such that the buildings do not all look the same
+  - Removed windows near the roof of the buildings to allow buildings to have uniform looking shapes towards the roof
 
 - __(Generating Environment Lighting)__
   - In the scene, there is some Lambertian lighting applied to the buildings to make them more 3D in appearance. As a future goal, a way to add shadows to the scene is to use a shadow map by saving a depth buffer from each lights point of view and then sampling the scene with the camera on the depth buffer to determine shadows.
 
 - __(Procedural Sky Background)__
-  - TODO
+  - Added a basic blue hue sky with stars as the sky background
+  - Added a small amount of FBM to the sky to make it less uniform with moving stars
+  - The sky adds additional r and g values to the blue sky depending on the ray position so when the user moves around the sky, the blue gets a small amount of hue from different colors to simulate camera movement

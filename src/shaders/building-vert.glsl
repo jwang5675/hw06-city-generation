@@ -22,6 +22,7 @@ out vec4 fs_Pos;
 out vec4 fs_Nor;
 out vec4 fs_Col;
 out vec4 fs_WorldPos;
+out vec3 fs_Helper;
 
 // Assumes resolution is 2000 x 2000 throughout the program as input
 vec4 screenToQuad(vec4 pos) {
@@ -46,4 +47,5 @@ void main() {
     gl_Position = u_ViewProj * finalQuadPos;
 
     fs_WorldPos = finalQuadPos; 
+    fs_Helper = vec3(vs_TransformCol4[0], vs_TransformCol4[2], vs_TransformCol2[1]);
 }
