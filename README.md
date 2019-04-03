@@ -59,4 +59,4 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - Green Hue Example: 
   - ![](images/greenhue.png)
   - Blue Hue Example:
-  -![](images/bluehue.png)
+  - ![](images/bluehue.png)
