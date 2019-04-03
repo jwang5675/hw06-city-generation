@@ -46,6 +46,9 @@ Demo (warning, scene is a bit slow, lowering resolution would provide for a bett
   - Added a mod function to add windows to the scene with a varying of light
   - Offset the mod function to add windows at non uniform spots on the buildings such that the buildings do not all look the same
   - Removed windows near the roof of the buildings to allow buildings to have uniform looking shapes towards the roof
+  - Example Buildings:
+  - ![](images/textureexample1.png)
+  - ![](images/textureexample2.png)
 
 - __(Generating Environment Lighting)__
   - In the scene, there is some Lambertian lighting applied to the buildings to make them more 3D in appearance. As a future goal, a way to add shadows to the scene is to use a shadow map by saving a depth buffer from each lights point of view and then sampling the scene with the camera on the depth buffer to determine shadows.
